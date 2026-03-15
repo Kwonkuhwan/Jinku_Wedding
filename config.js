@@ -35,18 +35,36 @@ const CONFIG = {
     motherDeceased: false
   },
 
-  wedding: {
-    date: "2026-08-01",
-    time: "12:30",
-    venue: "르비르모어 선릉",
-    hall: "클리타홀 2층",
-    address: "서울시 강남구 테헤란로 406 A동",
-    tel: "02-501-7000",
-    mapLinks: {
-      kakao: "https://kko.to/ZiF8w7afEX",
-      naver: "https://naver.me/xl0D3i0o"
-    }
+wedding: {
+  date: "2026-08-01",
+  time: "12:30",
+  venue: "르비르모어 선릉",
+  hall: "클리타홀 2층",
+  address: "서울시 강남구 테헤란로 406 A동",
+  tel: "02-501-7000",
+  mapLinks: {
+    kakao: "https://kko.to/ZiF8w7afEX",
+    naver: "https://naver.me/xl0D3i0o"
   },
+
+  // ✨ 교통 정보 추가
+  transport: {
+    subway: {
+      lines: [
+        { name: "2호선", station: "선릉역", exit: "1번 출구", time: "도보 1분", color: "#00a84d" },
+        { name: "분당선", station: "선릉역", exit: "1번 출구", time: "도보 1분", color: "#fabe00" }
+      ]
+    },
+    bus: {
+      info: "간선버스 146, 301, 362번\n지선버스 3426, 4419번\n(선릉역 정류장 하차)"
+    },
+    parking: {
+      available: true,
+      info: "건물 지하주차장 이용 가능 (2시간 무료)\n450대 주차 가능",
+      notice: "주차 공간이 협소하오니\n가급적 대중교통을 이용해 주시기 바랍니다."
+    }
+  }
+},
 
   // ── 인사말 ──
   greeting: {

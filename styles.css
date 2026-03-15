@@ -899,6 +899,156 @@ a {
 }
 
 /* ═══════════════════════════════════════════
+   Transport Information Styles
+   ═══════════════════════════════════════════ */
+
+.location__transport {
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
+  text-align: left;
+}
+
+.transport__title {
+  font-size: 1.125rem;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text);
+}
+
+.transport__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.transport__section {
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.transport__section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/*.transport__section--parking {
+  background: var(--color-bg-warm);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  border-bottom: none;
+}*/
+
+.transport__label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-accent-dark);
+  margin-bottom: var(--spacing-sm);
+  letter-spacing: 1px;
+}
+
+.transport__items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.transport__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.transport__detail {
+  color: var(--color-text-light);
+  line-height: 1.6;
+}
+
+.transport__detail strong {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.transport__info {
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+  line-height: 1.8;
+}
+
+/* 지하철 배지 */
+.subway__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  padding: 0.375rem 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--color-white);
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* 주차 정보 */
+/*.parking__info {
+  font-size: 0.875rem;
+  color: var(--color-text);
+  line-height: 1.8;
+  margin-bottom: var(--spacing-xs);
+}*/
+
+.transport__info.transport__notice {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+.parking__unavailable {
+  color: var(--color-text-muted);
+}
+
+/*.parking__notice {
+  font-size: 0.8125rem;
+  color: var(--color-text-light);
+  line-height: 1.8;
+  padding: var(--spacing-sm);
+  background: rgba(184, 149, 106, 0.1);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-accent-light);
+}*/
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+  .location__transport {
+    padding: var(--spacing-md);
+  }
+
+  .transport__item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .subway__badge {
+    align-self: flex-start;
+  }
+
+  .transport__content {
+    gap: var(--spacing-sm);
+  }
+}
+
+/* ═══════════════════════════════════════════
    Account Section (축의금)
    ═══════════════════════════════════════════ */
 .account {

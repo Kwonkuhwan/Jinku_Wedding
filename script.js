@@ -449,7 +449,7 @@ function initGallery(galleryImages) {
     return;
   }
 
-  const INITIAL_COUNT = 6; // 처음에 보여줄 사진 개수
+  const INITIAL_COUNT = 9; // 처음에 보여줄 사진 개수
   let isExpanded = false;
 
   // 갤러리 아이템 렌더링 함수
@@ -788,20 +788,90 @@ function handleSwipe() {
      Location Section
      ═══════════════════════════════════════════ */
 
-  function initLocation() {
-    const w = CONFIG.wedding;
-    $('#locationVenue').textContent = w.venue;
-    $('#locationHall').textContent = w.hall;
-    $('#locationAddress').textContent = w.address;
-    $('#locationTel').textContent = w.tel ? `Tel. ${w.tel}` : '';
-    $('#locationMapImg').src = 'images/location/1.jpg';
-    $('#kakaoMapBtn').href = w.mapLinks.kakao || '#';
-    $('#naverMapBtn').href = w.mapLinks.naver || '#';
+function initLocation() {
+  const w = CONFIG.wedding;
+  
+  // 기본 정보 설정
+  $('#locationVenue').textContent = w.venue;
+  $('#locationHall').textContent = w.hall;
+  $('#locationAddress').textContent = w.address;
+  $('#locationTel').textContent = w.tel ? `Tel. ${w.tel}` : '';
+  $('#locationMapImg').src = 'images/location/1.jpg';
+  $('#kakaoMapBtn').href = w.mapLinks.kakao || '#';
+  $('#naverMapBtn').href = w.mapLinks.naver || '#';
 
-    $('#copyAddressBtn').addEventListener('click', () => {
-      copyToClipboard(w.address, '주소가 복사되었습니다');
-    });
+  // 주소 복사 기능
+  $('#copyAddressBtn').addEventListener('click', () => {
+    copyToClipboard(w.address, '주소가 복사되었습니다');
+  });
+
+  // 교통 정보 렌더링
+  if (w.transport) {
+    const transportContainer = $('#locationTransport');
+    if (!transportContainer) return; // 안전장치
+
+    let transportHTML = '<h3 class="transport__title">교통 안내</h3><div class="transport__content">';
+
+    // 지하철 정보
+    if (w.transport.subway && w.transport.subway.lines) {
+      transportHTML += '<div class="transport__section">';
+      transportHTML += '<div class="transport__label">🚇 지하철</div>';
+      transportHTML += '<div class="transport__items">';
+      
+      w.transport.subway.lines.forEach(line => {
+        transportHTML += `
+          <div class="transport__item">
+            <span class="subway__badge" style="background-color: ${line.color}">
+              ${line.name}
+            </span>
+            <span class="transport__detail">
+              <strong>${line.station}</strong> ${line.exit} ${line.time}
+            </span>
+          </div>
+        `;
+      });
+      
+      transportHTML += '</div></div>';
+    }
+
+    // 버스 정보
+    if (w.transport.bus && w.transport.bus.info) {
+      const busInfo = w.transport.bus.info.replace(/\n/g, '<br>');
+      transportHTML += `
+        <div class="transport__section">
+          <div class="transport__label">🚌 버스</div>
+          <div class="transport__info">${busInfo}</div>
+        </div>
+      `;
+    }
+
+    // 주차 정보 (버스와 동일한 구조로 변경)
+    if (w.transport.parking) {
+      // ✨ transport__section--parking 대신 일반 transport__section 사용
+      transportHTML += '<div class="transport__section">';
+      transportHTML += '<div class="transport__label">🅿️ 주차 안내</div>';
+  
+      if (w.transport.parking.available) {
+        // 줄바꿈 처리
+        const parkingInfo = w.transport.parking.info.replace(/\n/g, '<br>');
+        transportHTML += `<div class="transport__info">${parkingInfo}</div>`;
+      } else {
+        transportHTML += '<div class="transport__info parking__unavailable">주차 공간이 없습니다</div>';
+      }
+  
+      if (w.transport.parking.notice) {
+        // 주의사항도 같은 스타일로
+        const parkingNotice = w.transport.parking.notice.replace(/\n/g, '<br>');
+        transportHTML += `<div class="transport__info transport__notice">${parkingNotice}</div>`;
+      }
+  
+      transportHTML += '</div>';
+    }
+
+    transportHTML += '</div>';
+    transportContainer.innerHTML = transportHTML;
   }
+}
 
   /* ═══════════════════════════════════════════
      Account Section (축의금)
