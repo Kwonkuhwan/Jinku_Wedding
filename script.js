@@ -461,95 +461,247 @@
     });
   }
 
-  /* ═══════════════════════════════════════════
-     Photo Modal (with swipe)
-     ═══════════════════════════════════════════ */
+ /* ═══════════════════════════════════════════
+   Photo Modal (with Advanced Zoom & Swipe)
+   ═══════════════════════════════════════════ */
 
-  let modalImages = [];
-  let modalIndex = 0;
-  let touchStartX = 0;
-  let touchEndX = 0;
-  let touchStartY = 0;
-  let touchEndY = 0;
+let modalImages = [];
+let modalIndex = 0;
+let touchStartX = 0;
+let touchEndX = 0;
+let touchStartY = 0;
+let touchEndY = 0;
 
-  function openPhotoModal(images, index) {
-    modalImages = images;
-    modalIndex = index;
+// 줌 관련 변수
+let scale = 1;
+let translateX = 0;
+let translateY = 0;
+let lastScale = 1;
+let lastTranslateX = 0;
+let lastTranslateY = 0;
+let isDragging = false;
+let dragStartX = 0;
+let dragStartY = 0;
+let lastTapTime = 0;
+
+function openPhotoModal(images, index) {
+  modalImages = images;
+  modalIndex = index;
+  resetZoom();
+  showModalImage();
+  $('#photoModal').classList.add('is-open');
+  document.body.classList.add('no-scroll');
+}
+
+function closePhotoModal() {
+  $('#photoModal').classList.remove('is-open');
+  document.body.classList.remove('no-scroll');
+  resetZoom();
+}
+
+function showModalImage() {
+  const img = $('#modalImg');
+  img.src = modalImages[modalIndex];
+  $('#modalCounter').textContent = `${modalIndex + 1} / ${modalImages.length}`;
+
+  $('#modalPrev').style.display = modalIndex > 0 ? '' : 'none';
+  $('#modalNext').style.display = modalIndex < modalImages.length - 1 ? '' : 'none';
+  
+  resetZoom();
+}
+
+function modalNavigate(dir) {
+  const newIndex = modalIndex + dir;
+  if (newIndex >= 0 && newIndex < modalImages.length) {
+    modalIndex = newIndex;
     showModalImage();
-    $('#photoModal').classList.add('is-open');
-    document.body.classList.add('no-scroll');
   }
+}
 
-  function closePhotoModal() {
-    $('#photoModal').classList.remove('is-open');
-    document.body.classList.remove('no-scroll');
-  }
+function resetZoom() {
+  scale = 1;
+  translateX = 0;
+  translateY = 0;
+  lastScale = 1;
+  lastTranslateX = 0;
+  lastTranslateY = 0;
+  updateTransform();
+}
 
-  function showModalImage() {
-    const img = $('#modalImg');
-    img.src = modalImages[modalIndex];
-    $('#modalCounter').textContent = `${modalIndex + 1} / ${modalImages.length}`;
+function updateTransform() {
+  const img = $('#modalImg');
+  img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+  img.style.transition = isDragging ? 'none' : 'transform 0.3s ease';
+}
 
-    $('#modalPrev').style.display = modalIndex > 0 ? '' : 'none';
-    $('#modalNext').style.display = modalIndex < modalImages.length - 1 ? '' : 'none';
-  }
+function getDistance(touch1, touch2) {
+  const dx = touch1.clientX - touch2.clientX;
+  const dy = touch1.clientY - touch2.clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
 
-  function modalNavigate(dir) {
-    const newIndex = modalIndex + dir;
-    if (newIndex >= 0 && newIndex < modalImages.length) {
-      modalIndex = newIndex;
-      showModalImage();
+function getCenter(touch1, touch2) {
+  return {
+    x: (touch1.clientX + touch2.clientX) / 2,
+    y: (touch1.clientY + touch2.clientY) / 2
+  };
+}
+
+function initPhotoModal() {
+  const modal = $('#photoModal');
+  const container = $('#modalContainer');
+  const img = $('#modalImg');
+
+  $('#modalClose').addEventListener('click', closePhotoModal);
+  $('#modalPrev').addEventListener('click', () => modalNavigate(-1));
+  $('#modalNext').addEventListener('click', () => modalNavigate(1));
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal || e.target.id === 'modalContainer') {
+      closePhotoModal();
     }
-  }
+  });
 
-  function initPhotoModal() {
-    $('#modalClose').addEventListener('click', closePhotoModal);
-    $('#modalPrev').addEventListener('click', () => modalNavigate(-1));
-    $('#modalNext').addEventListener('click', () => modalNavigate(1));
+  // 키보드 네비게이션
+  document.addEventListener('keydown', (e) => {
+    if (!modal.classList.contains('is-open')) return;
+    if (e.key === 'Escape') closePhotoModal();
+    if (e.key === 'ArrowLeft') modalNavigate(-1);
+    if (e.key === 'ArrowRight') modalNavigate(1);
+  });
 
-    const modal = $('#photoModal');
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal || e.target.id === 'modalContainer') {
-        closePhotoModal();
+  // 터치 이벤트 변수
+  let initialDistance = 0;
+  let initialScale = 1;
+  let touches = [];
+
+  // 터치 시작
+  container.addEventListener('touchstart', (e) => {
+    touches = Array.from(e.touches);
+    
+    if (touches.length === 2) {
+      // 핀치 줌 시작
+      e.preventDefault();
+      initialDistance = getDistance(touches[0], touches[1]);
+      initialScale = scale;
+    } else if (touches.length === 1) {
+      // 더블탭 감지
+      const currentTime = new Date().getTime();
+      const tapGap = currentTime - lastTapTime;
+      
+      if (tapGap < 300 && tapGap > 0) {
+        // 더블탭 확대/축소
+        e.preventDefault();
+        if (scale > 1) {
+          resetZoom();
+        } else {
+          scale = 2.5;
+          updateTransform();
+        }
       }
-    });
-
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-      if (!modal.classList.contains('is-open')) return;
-      if (e.key === 'Escape') closePhotoModal();
-      if (e.key === 'ArrowLeft') modalNavigate(-1);
-      if (e.key === 'ArrowRight') modalNavigate(1);
-    });
-
-    // Swipe support
-    const container = $('#modalContainer');
-
-    container.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    }, { passive: true });
-
-    container.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      touchEndY = e.changedTouches[0].screenY;
-      handleSwipe();
-    }, { passive: true });
-  }
-
-  function handleSwipe() {
-    const diffX = touchStartX - touchEndX;
-    const diffY = touchStartY - touchEndY;
-    const minSwipe = 50;
-
-    if (Math.abs(diffX) < minSwipe || Math.abs(diffX) < Math.abs(diffY)) return;
-
-    if (diffX > 0) {
-      modalNavigate(1); // swipe left -> next
-    } else {
-      modalNavigate(-1); // swipe right -> prev
+      
+      lastTapTime = currentTime;
+      
+      // 드래그 시작 (확대된 상태에서만)
+      if (scale > 1) {
+        isDragging = true;
+        dragStartX = touches[0].clientX - translateX;
+        dragStartY = touches[0].clientY - translateY;
+      } else {
+        // 스와이프 준비
+        touchStartX = touches[0].clientX;
+        touchStartY = touches[0].clientY;
+      }
     }
+  }, { passive: false });
+
+  // 터치 이동
+  container.addEventListener('touchmove', (e) => {
+    touches = Array.from(e.touches);
+    
+    if (touches.length === 2) {
+      // 핀치 줌
+      e.preventDefault();
+      const currentDistance = getDistance(touches[0], touches[1]);
+      const newScale = initialScale * (currentDistance / initialDistance);
+      
+      scale = Math.max(1, Math.min(4, newScale));
+      updateTransform();
+    } else if (touches.length === 1 && isDragging && scale > 1) {
+      // 드래그 이동
+      e.preventDefault();
+      translateX = touches[0].clientX - dragStartX;
+      translateY = touches[0].clientY - dragStartY;
+      
+      // 이동 범위 제한
+      const maxTranslate = (scale - 1) * 150;
+      translateX = Math.max(-maxTranslate, Math.min(maxTranslate, translateX));
+      translateY = Math.max(-maxTranslate, Math.min(maxTranslate, translateY));
+      
+      updateTransform();
+    }
+  }, { passive: false });
+
+  // 터치 종료
+  container.addEventListener('touchend', (e) => {
+    if (touches.length === 2) {
+      // 핀치 줌 종료
+      lastScale = scale;
+    } else if (isDragging) {
+      // 드래그 종료
+      isDragging = false;
+      lastTranslateX = translateX;
+      lastTranslateY = translateY;
+    } else if (scale === 1) {
+      // 스와이프 처리 (확대되지 않은 상태에서만)
+      touchEndX = e.changedTouches[0].clientX;
+      touchEndY = e.changedTouches[0].clientY;
+      handleSwipe();
+    }
+    
+    // 축소 시 위치 초기화
+    if (scale <= 1) {
+      resetZoom();
+    }
+    
+    touches = [];
+  }, { passive: true });
+
+  // 마우스 휠 줌 (데스크탑)
+  container.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    const newScale = scale * delta;
+    scale = Math.max(1, Math.min(4, newScale));
+    
+    if (scale <= 1) {
+      resetZoom();
+    } else {
+      updateTransform();
+    }
+  }, { passive: false });
+
+  // 이미지 로드 시 줌 초기화
+  img.addEventListener('load', () => {
+    resetZoom();
+  });
+}
+
+function handleSwipe() {
+  const diffX = touchStartX - touchEndX;
+  const diffY = touchStartY - touchEndY;
+  const minSwipe = 50;
+
+  if (Math.abs(diffX) < minSwipe || Math.abs(diffX) < Math.abs(diffY)) return;
+
+  if (diffX > 0) {
+    modalNavigate(1); // swipe left -> next
+  } else {
+    modalNavigate(-1); // swipe right -> prev
   }
+}
+
 
   /* ═══════════════════════════════════════════
      Location Section

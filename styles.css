@@ -320,17 +320,32 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3.5rem 2.5rem;
-  touch-action: pan-y;
+  padding: 3.5rem 1rem;
+  touch-action: none; /* 브라우저 기본 제스처 방지 */
   user-select: none;
   -webkit-user-select: none;
+  overflow: hidden; /* 확대 시 이미지가 컨테이너 밖으로 나가지 않도록 */
 }
 
 .photo-modal__img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: zoom-in;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  will-change: transform; /* 성능 최적화 */
+  transform-origin: center center;
+}
+
+.photo-modal__img[style*="scale"] {
+  cursor: grab;
+}
+
+.photo-modal__img:active {
+  cursor: grabbing;
 }
 
 .photo-modal__counter {
@@ -427,6 +442,8 @@ a {
   color: var(--color-white);
   padding: 0 var(--spacing-md) var(--spacing-lg);
   width: 100%;
+ /* ↓ 음수 값일수록 더 위로 올라갑니다 */
+  /*transform: translateY(-300px);*/
 }
 
 .hero__label {
