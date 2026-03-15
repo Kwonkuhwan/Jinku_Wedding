@@ -438,28 +438,109 @@
      Gallery Section
      ═══════════════════════════════════════════ */
 
-  function initGallery(galleryImages) {
-    const grid = $('#galleryGrid');
-    // Remove loading placeholder if present
-    const placeholder = grid.querySelector('.loading-placeholder');
-    if (placeholder) placeholder.remove();
+function initGallery(galleryImages) {
+  const grid = $('#galleryGrid');
+  const placeholder = grid.querySelector('.loading-placeholder');
+  if (placeholder) placeholder.remove();
 
-    if (galleryImages.length === 0) {
-      // Hide gallery section if no images found
-      const gallerySection = $('#gallery');
-      if (gallerySection) gallerySection.style.display = 'none';
-      return;
-    }
+  if (galleryImages.length === 0) {
+    const gallerySection = $('#gallery');
+    if (gallerySection) gallerySection.style.display = 'none';
+    return;
+  }
 
-    galleryImages.forEach((src, i) => {
+  const INITIAL_COUNT = 6; // 처음에 보여줄 사진 개수
+  let isExpanded = false;
+
+  // 갤러리 아이템 렌더링 함수
+  function renderGalleryItems(showAll = false) {
+    // 기존 아이템들 제거
+    grid.innerHTML = '';
+    
+    const itemsToShow = showAll ? galleryImages.length : Math.min(INITIAL_COUNT, galleryImages.length);
+    
+    // ═══ DOM 요소 생성 루프 시작 ═══
+    for (let i = 0; i < itemsToShow; i++) {
       const div = document.createElement('div');
       div.className = 'gallery__item animate-item';
       div.setAttribute('data-animate', 'scale-in');
-      div.innerHTML = `<img src="${src}" alt="갤러리 사진 ${i + 1}" loading="lazy">`;
-      div.addEventListener('click', () => openPhotoModal(galleryImages, i));
+      div.innerHTML = `<img src="${galleryImages[i]}" alt="갤러리 사진 ${i + 1}" loading="lazy">`;
+      
+      div.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openPhotoModal(galleryImages, i);
+      });
+      
       grid.appendChild(div);
+    }
+    // ═══ DOM 요소 생성 루프 끝 ═══
+    
+    // 🎨 ↓↓↓ 여기에 애니메이션 코드 추가! ↓↓↓ 🎨
+    if (showAll && isExpanded) {
+      // 새로 추가되는 아이템들에 애니메이션 적용
+      setTimeout(() => {
+        const newItems = grid.querySelectorAll('.gallery__item:nth-child(n+7)');
+        newItems.forEach((item, index) => {
+          setTimeout(() => {
+            item.classList.add('fade-in');
+          }, index * 50);
+        });
+      }, 50);
+    }
+    // 🎨 ↑↑↑ 애니메이션 코드 끝 ↑↑↑ 🎨
+  }
+
+  // 처음에는 6장만 렌더링
+  renderGalleryItems(false);
+
+  // 6장보다 많으면 더보기 버튼 추가
+  if (galleryImages.length > INITIAL_COUNT) {
+    const moreContainer = document.createElement('div');
+    moreContainer.className = 'gallery__more-container';
+    
+    const moreBtn = document.createElement('button');
+    moreBtn.className = 'gallery__more-btn';
+    moreBtn.innerHTML = `
+      <span class="gallery__more-text">더보기</span>
+      <span class="gallery__more-count">(+${galleryImages.length - INITIAL_COUNT})</span>
+      <span class="gallery__more-arrow">↓</span>
+    `;
+    
+    moreContainer.appendChild(moreBtn);
+    grid.parentElement.insertBefore(moreContainer, grid.nextSibling);
+
+    // 더보기/접기 토글 기능
+    moreBtn.addEventListener('click', () => {
+      if (!isExpanded) {
+        // ⚠️ 중요: renderGalleryItems 호출 전에 isExpanded를 true로 설정!
+        isExpanded = true;
+        renderGalleryItems(true);
+        
+        // 버튼 텍스트 변경
+        moreBtn.querySelector('.gallery__more-text').textContent = '접기';
+        moreBtn.querySelector('.gallery__more-count').style.display = 'none';
+        //moreBtn.querySelector('.gallery__more-arrow').textContent = '↑';
+        moreBtn.classList.add('is-expanded');
+      } else {
+        // 6장만 표시
+        isExpanded = false;
+        renderGalleryItems(false);
+        
+        // 버튼 텍스트 원래대로
+        moreBtn.querySelector('.gallery__more-text').textContent = '더보기';
+        moreBtn.querySelector('.gallery__more-count').style.display = '';
+        //moreBtn.querySelector('.gallery__more-arrow').textContent = '↓';
+        moreBtn.classList.remove('is-expanded');
+        
+        // 갤러리 상단으로 부드럽게 스크롤
+        setTimeout(() => {
+          grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
     });
   }
+}
 
  /* ═══════════════════════════════════════════
    Photo Modal (with Advanced Zoom & Swipe)
