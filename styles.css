@@ -1434,6 +1434,33 @@ a {
     min-height: 100vh;
   }
 
+  /* ─── 음악 컨트롤 스타일 추가 ─── */
+.music-control {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  width: 35px;
+  height: 35px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--color-accent);
+}
+
+.music-control.playing {
+  animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
   .hero {
     min-height: 100vh;
   }

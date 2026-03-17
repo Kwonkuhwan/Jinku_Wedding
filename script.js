@@ -1010,12 +1010,59 @@ function initLocation() {
     mutObs.observe(document.body, { childList: true, subtree: true });
   }
 
+    /* ═══════════════════════════════════════════
+     music
+     ═══════════════════════════════════════════ */
+
+  function initMusic() {
+  if (!CONFIG.music || !CONFIG.music.showButton) return;
+
+  const audio = new Audio(CONFIG.music.mediaUrl);
+  audio.loop = true;
+  
+  const musicBtn = document.createElement('div');
+  musicBtn.className = 'music-control';
+  musicBtn.innerHTML = '<span id="musicIcon" style="font-family: sans-serif;">♬</span>'; 
+  document.body.appendChild(musicBtn);
+
+  const musicIcon = document.getElementById('musicIcon');
+
+  // 음악 재생 및 아이콘 변경 함수
+  window.playWeddingMusic = function() {
+    if (audio.paused) {
+      audio.play().then(() => {
+        musicBtn.classList.add('playing');
+        musicIcon.textContent = '❚❚'; 
+      }).catch(e => console.log("자동 재생 제한:", e));
+    }
+  };
+
+  // 음악 정지 및 아이콘 변경 함수
+  window.pauseWeddingMusic = function() {
+    audio.pause();
+    musicBtn.classList.remove('playing');
+    musicIcon.textContent = '♬';
+  };
+
+  musicBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (audio.paused) window.playWeddingMusic();
+    else window.pauseWeddingMusic();
+  });
+
+  // 커튼 없이 바로 들어오는 경우를 위한 첫 클릭 이벤트
+  document.addEventListener('click', () => {
+    if (audio.paused) window.playWeddingMusic();
+  }, { once: true });
+}
+
   /* ═══════════════════════════════════════════
      Init
      ═══════════════════════════════════════════ */
 
   async function init() {
     setMetaTags();
+    initMusic();
     initCurtain();
     initHero();
     initCountdown();

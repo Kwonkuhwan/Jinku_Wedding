@@ -13,6 +13,13 @@
  */
 
 const CONFIG = {
+    // ── 배경 음악 설정 ──
+  music: {
+    showButton: true,      // 음악 조절 버튼 표시 여부
+    autoPlay: true,        // 자동 재생 시도 (브라우저 정책에 따라 제한될 수 있음)
+    mediaUrl: "music/bgm.mp3" // 음악 파일 경로 (준비하신 파일명으로 수정하세요)
+  },
+
   // ── 초대장 열기 ──
   useCurtain: true,  // 초대장 열기 화면 사용 여부 (true: 사용, false: 바로 본문 표시)
 
