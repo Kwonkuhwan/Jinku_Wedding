@@ -1014,15 +1014,47 @@ function initLocation() {
      music
      ═══════════════════════════════════════════ */
 
-  function initMusic() {
+function initMusic() {
   if (!CONFIG.music || !CONFIG.music.showButton) return;
 
   const audio = new Audio(CONFIG.music.mediaUrl);
   audio.loop = true;
   
+  // 이미 버튼이 있다면 중복 생성 방지
+  if (document.querySelector('.music-control')) return;
+
   const musicBtn = document.createElement('div');
   musicBtn.className = 'music-control';
-  musicBtn.innerHTML = '<span id="musicIcon" style="font-family: sans-serif;">♬</span>'; 
+  musicBtn.innerHTML = '<span id="musicIcon">♬</span>'; 
+  
+  // CSS를 JS에서 직접 주입 (좌표 강제 고정)
+  Object.assign(musicBtn.style, {
+    position: 'fixed',
+    bottom: '25px',
+    right: '20px',
+    left: 'auto', // 왼쪽으로 튀는 것 방지
+    width: '48px',
+    height: '48px',
+    zIndex: '999999',
+    backgroundColor: 'white',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: '1px solid #b8956a',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+    cursor: 'pointer'
+  });
+
+  document.body.appendChild(musicBtn);
+  
+  // 브라우저 창 크기가 변해도 위치를 사수하는 마법
+  window.addEventListener('resize', () => {
+    musicBtn.style.right = '20px';
+    musicBtn.style.left = 'auto';
+  });
+
+  // 중요: body 바로 아래에 넣어야 다른 요소에 가려지지 않습니다.
   document.body.appendChild(musicBtn);
 
   const musicIcon = document.getElementById('musicIcon');

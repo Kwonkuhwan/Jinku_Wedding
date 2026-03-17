@@ -1434,31 +1434,53 @@ a {
     min-height: 100vh;
   }
 
-  /* ─── 음악 컨트롤 스타일 추가 ─── */
-.music-control {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
-  width: 35px;
-  height: 35px;
-  background: white;
-  border-radius: 50%;
-  display: flex;
+..music-control {
+  /* 1. 다른 거 다 무시하고 화면 기준(fixed)으로 고정 */
+  position: fixed !important;
+  
+  /* 2. 오른쪽에서 20px, 아래에서 25px 띄움 (모바일/PC 공통) */
+  bottom: 25px !important;
+  right: 20px !important;
+  
+  /* 3. 왼쪽이나 위쪽으로 붙으려는 성질을 강제로 제거 */
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+
+  /* 4. 레이어 최상단 (커튼보다 위) */
+  z-index: 999999 !important;
+
+  /* 5. 디자인 */
+  width: 48px !important;
+  height: 48px !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid #b8956a !important;
+  border-radius: 50% !important;
+  display: flex !important;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  cursor: pointer;
-  font-size: 14px;
-  color: var(--color-accent);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+  cursor: pointer !important;
+  
+  /* 모바일 터치 최적화 */
+  -webkit-tap-highlight-color: transparent;
 }
 
+#musicIcon {
+  font-size: 20px !important;
+  color: #b8956a !important;
+  line-height: 1 !important;
+  display: inline-block !important;
+}
+
+/* 재생 중일 때 제자리 회전 */
 .music-control.playing {
-  animation: spin 4s linear infinite;
+  animation: musicSpin 6s linear infinite !important;
 }
 
-@keyframes spin {
-  100% { transform: rotate(360deg); }
+@keyframes musicSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
   .hero {
