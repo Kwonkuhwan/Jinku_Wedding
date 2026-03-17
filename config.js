@@ -105,6 +105,7 @@ wedding: {
   // ── 링크 공유 시 나타나는 문구 ──
   meta: {
     title: "권구환 ♥ 김진실 결혼합니다",
-    description: "2026년 08월 01일, 소중한 분들을 초대합니다."
+    description: "2026년 08월 01일, 소중한 분들을 초대합니다.",
+    image : "images/og/1.jpg"
   }
 };
