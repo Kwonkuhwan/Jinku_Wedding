@@ -691,34 +691,56 @@ a {
   margin-bottom: var(--spacing-xl);
 }
 
-/* 스토리 사진들을 가로로 나열 */
+/* 스토리 사진들을 가로로 나열 (모바일 2열) */
 .story__photos {
   display: flex !important;
-  flex-direction: row !important; /* 무조건 가로로 */
-  flex-wrap: wrap !important;    /* 공간 부족하면 다음 줄로 */
-  gap: 10px !important;          /* 사진 사이 간격 */
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
   justify-content: center !important;
+  padding: 0 10px;
 }
 
-/* 각 사진 아이템 너비 설정 */
+/* 각 사진 + 정보 카드 */
 .story__photo-item {
-  /* 모바일에서도 한 줄에 2개씩 나오게 설정 (여백 제외 약 48%) */
-  width: calc(50% - 5px) !important; 
-  flex: 0 0 calc(50% - 5px) !important;
+  width: calc(50% - 6px) !important;
+  flex: 0 0 calc(50% - 6px) !important;
+  background-color: #ffffff; /* 텍스트 배경색 */
   border-radius: var(--radius-md);
   overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   cursor: pointer;
+  text-align: center;
 }
 
 .story__photo-item img {
   width: 100%;
-  aspect-ratio: 1 / 1; /* 사진을 정사각형으로 맞추면 더 정갈해 보입니다. 4/3도 가능 */
+  aspect-ratio: 1 / 1; 
   object-fit: cover;
+  display: block;
   transition: transform var(--transition-slow);
 }
 
 .story__photo-item:hover img {
   transform: scale(1.03);
+}
+
+/* 추가된 정보 영역 스타일 */
+.story__info {
+  padding: 12px 5px !important;
+}
+
+.story__name {
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  color: var(--color-text) !important;
+  margin-bottom: 4px !important;
+}
+
+.story__details {
+  font-size: 0.75rem !important;
+  color: var(--color-text-light) !important;
+  font-weight: 300 !important;
 }
 
 /* ═══════════════════════════════════════════

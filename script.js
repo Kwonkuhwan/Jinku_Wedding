@@ -414,25 +414,42 @@
      ═══════════════════════════════════════════ */
 
   function initStory(storyImages) {
-    $('#storyTitle').textContent = CONFIG.story.title;
-    $('#storyContent').textContent = CONFIG.story.content;
+  $('#storyTitle').textContent = CONFIG.story.title;
+  $('#storyContent').textContent = CONFIG.story.content;
 
-    const container = $('#storyPhotos');
-    // Remove loading placeholder if present
-    const placeholder = container.querySelector('.loading-placeholder');
-    if (placeholder) placeholder.remove();
+  const container = $('#storyPhotos');
+  const placeholder = container.querySelector('.loading-placeholder');
+  if (placeholder) placeholder.remove();
 
-    if (storyImages.length === 0) return;
+  if (storyImages.length === 0) return;
 
-    storyImages.forEach((src, i) => {
-      const div = document.createElement('div');
-      div.className = 'story__photo-item animate-item';
-      div.setAttribute('data-animate', 'fade-up');
-      div.innerHTML = `<img src="${src}" alt="스토리 사진 ${i + 1}" loading="lazy">`;
-      div.addEventListener('click', () => openPhotoModal(storyImages, i));
-      container.appendChild(div);
-    });
-  }
+  // 1. 여기에 각 사진 순서대로 들어갈 정보를 입력하세요.
+  const profileData = [
+    { name: "권구환", details: "#31세 #ISTJ #개발자<br>#추구미 #건물주" }, // 첫 번째 사진 정보
+    { name: "김진실", details: "#31세 #ESFP #마케터<br>#추구미 #돈많은백수" }  // 두 번째 사진 정보
+    // 사진이 더 있다면 { name: "...", details: "..." } 식으로 계속 추가
+  ];
+
+  storyImages.forEach((src, i) => {
+    const data = profileData[i] || { name: "이름", details: "정보" }; // 데이터가 없으면 기본값 노출
+    
+    const div = document.createElement('div');
+    div.className = 'story__photo-item animate-item';
+    div.setAttribute('data-animate', 'fade-up');
+    
+    // 2. 이미지 아래에 정보 영역(story__info)을 추가했습니다.
+    div.innerHTML = `
+      <img src="${src}" alt="스토리 사진 ${i + 1}" loading="lazy">
+      <div class="story__info">
+        <p class="story__name">${data.name}</p>
+        <p class="story__details">${data.details}</p>
+      </div>
+    `;
+    
+    div.addEventListener('click', () => openPhotoModal(storyImages, i));
+    container.appendChild(div);
+  });
+}
 
   /* ═══════════════════════════════════════════
      Gallery Section
