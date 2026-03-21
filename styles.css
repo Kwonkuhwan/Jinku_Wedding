@@ -691,13 +691,20 @@ a {
   margin-bottom: var(--spacing-xl);
 }
 
+/* 스토리 사진들을 가로로 나열 */
 .story__photos {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
+  display: flex !important;
+  flex-direction: row !important; /* 무조건 가로로 */
+  flex-wrap: wrap !important;    /* 공간 부족하면 다음 줄로 */
+  gap: 10px !important;          /* 사진 사이 간격 */
+  justify-content: center !important;
 }
 
+/* 각 사진 아이템 너비 설정 */
 .story__photo-item {
+  /* 모바일에서도 한 줄에 2개씩 나오게 설정 (여백 제외 약 48%) */
+  width: calc(50% - 5px) !important; 
+  flex: 0 0 calc(50% - 5px) !important;
   border-radius: var(--radius-md);
   overflow: hidden;
   cursor: pointer;
@@ -705,7 +712,7 @@ a {
 
 .story__photo-item img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1; /* 사진을 정사각형으로 맞추면 더 정갈해 보입니다. 4/3도 가능 */
   object-fit: cover;
   transition: transform var(--transition-slow);
 }
