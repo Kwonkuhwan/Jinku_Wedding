@@ -883,12 +883,11 @@ a {
   margin-bottom: var(--spacing-lg);
   border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
 }
 
 .location__map-img {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 542 / 336;
   object-fit: cover;
 }
 
@@ -1415,7 +1414,7 @@ a {
   }
 
   .story__photo-item img {
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 5 / 6;
   }
 
   .section__title {
