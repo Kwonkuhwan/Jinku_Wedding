@@ -92,13 +92,13 @@ wedding: {
   accounts: {
     groom: [
       { role: "신랑", name: "권구환", bank: "우리은행", number: "1002150295462", kakaopay: "https://qr.kakaopay.com/Ej8bEDkgG" },
-      { role: "아버지", name: "권용진", bank: "신한은행", number: "000-000-000000" }, // 변경 예정
+      { role: "아버지", name: "권용진", bank: "농협은행", number: "16712552321" }, // 변경 예정
       { role: "어머니", name: "이영임", bank: "농협은행", number: "16801104471" }
     ],
     bride: [
       { role: "신부", name: "김진실", bank: "국민은행", number: "6578201364091",  kakaopay: "https://qr.kakaopay.com/Ej7qmQZxq"},  // 카카오페이 주소만 바꾸면 됨.
-      { role: "아버지", name: "김용호", bank: "기업은행", number: "000-000-000000" }, // 변경 예정
-      { role: "어머니", name: "김보희", bank: "농협은행", number: "000-000-000000" } // 변경 예정
+      { role: "아버지", name: "김용호", bank: "우리은행", number: "1002044279497" }, // 변경 예정
+      { role: "어머니", name: "김보희", bank: "국민은행", number: "59480101026307" } // 변경 예정
     ]
   },
 
