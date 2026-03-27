@@ -17,7 +17,7 @@ const CONFIG = {
   music: {
     showButton: true,      // 음악 조절 버튼 표시 여부
     autoPlay: true,        // 자동 재생 시도 (브라우저 정책에 따라 제한될 수 있음)
-    mediaUrl: "music/bgm.mp3" // 음악 파일 경로 (준비하신 파일명으로 수정하세요)
+    mediaUrl: "music/bgm.m4a" // 음악 파일 경로 (준비하신 파일명으로 수정하세요)
   },
 
   // ── 초대장 열기 ──

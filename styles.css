@@ -1336,6 +1336,36 @@ a {
   letter-spacing: 2px;
 }
 
+/* 하단 음원 정보 스타일 */
+.footer__music-info {
+  margin-top: 40px !important;
+  margin-bottom: 20px !important;
+  text-align: center !important;
+  /* 아주 작고 연한 회색조 설정 */
+  font-size: 0.65rem !important; 
+  color: #a0a0a0 !important;
+  line-height: 1.6 !important;
+  opacity: 0.8;
+}
+
+/* '음원 정보' 타이틀 스타일 */
+.music-info__title-main {
+  font-weight: 600 !important;
+  margin-bottom: 6px !important;
+  color: #909090 !important; /* 타이틀은 살짝 더 진한 회색 */
+  letter-spacing: 1px;
+}
+
+.footer__music-info p {
+  margin: 2px 0 !important;
+}
+
+.footer__music-info a {
+  color: #a0a0a0 !important;
+  text-decoration: underline !important;
+  word-break: break-all;
+}
+
 /* ═══════════════════════════════════════════
    Loading Placeholder
    ═══════════════════════════════════════════ */
