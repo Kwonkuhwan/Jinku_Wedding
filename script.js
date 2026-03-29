@@ -413,7 +413,7 @@
      Story Section
      ═══════════════════════════════════════════ */
 
-  function initStory(storyImages) {
+function initStory(storyImages) {
   $('#storyTitle').textContent = CONFIG.story.title;
   $('#storyContent').textContent = CONFIG.story.content;
 
@@ -423,21 +423,14 @@
 
   if (storyImages.length === 0) return;
 
-  // 1. 여기에 각 사진 순서대로 들어갈 정보를 입력하세요.
-  const profileData = [
-    { name: "🤵‍권구환", details: "#31세 #ISTJ #개발자<br>#추구미 #건물주" }, // 첫 번째 사진 정보
-    { name: "👰김진실", details: "#31세 #ESFP #마케터<br>#추구미 #돈많은백수" }  // 두 번째 사진 정보
-    // 사진이 더 있다면 { name: "...", details: "..." } 식으로 계속 추가
-  ];
-
   storyImages.forEach((src, i) => {
-    const data = profileData[i] || { name: "이름", details: "정보" }; // 데이터가 없으면 기본값 노출
+    // config.js의 participants 배열에서 정보를 가져옴
+    const data = CONFIG.story.participants[i] || { name: "이름", details: "정보" };
     
     const div = document.createElement('div');
     div.className = 'story__photo-item animate-item';
     div.setAttribute('data-animate', 'fade-up');
     
-    // 2. 이미지 아래에 정보 영역(story__info)을 추가했습니다.
     div.innerHTML = `
       <img src="${src}" alt="스토리 사진 ${i + 1}" loading="lazy">
       <div class="story__info">
@@ -1031,6 +1024,23 @@ function initLocation() {
      music
      ═══════════════════════════════════════════ */
 
+     // 하단 음원 정보 출력 함수 추가
+function initMusicInfo() {
+  const info = CONFIG.music.info;
+  const footer = document.querySelector('.footer');
+  if (!footer || !info) return;
+
+  const musicHtml = `
+    <div class="footer__music-info">
+      <p class="music-info__title-main">[ 음원 정보 ]</p>
+      <p>Title : ${info.title}</p>
+      <p>Music by ${info.artist}</p>
+      <p>Link : <a href="${info.link}" target="_blank">${info.link}</a></p>
+    </div>
+  `;
+  footer.insertAdjacentHTML('beforeend', musicHtml);
+}
+
 function initMusic() {
   if (!CONFIG.music || !CONFIG.music.showButton) return;
 
@@ -1126,6 +1136,7 @@ function initMusic() {
     initLocation();
     initAccounts();
     initFooter();
+    initMusicInfo(); // 이 줄을 추가하세요!
     initScrollAnimations();
 
     // Set story text immediately (photos load async)
