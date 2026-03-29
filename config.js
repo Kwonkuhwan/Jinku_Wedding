@@ -22,7 +22,7 @@ const CONFIG = {
     info: {
       title: "Wedding Smile",
       artist: "@브금통장",
-      link: "https://www.youtube.com/@bgm_storage"
+      link: "https://www.youtube.com/watch?v=Dr0XArLBNf4&t=3988s"
     }
   },
 
