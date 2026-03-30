@@ -94,8 +94,8 @@ wedding: {
  
     // 사진별 상세 정보 추가
     participants: [
-      { name: "권구환", details: "#31세 #ISTJ #개발자<br>#장래희망 #돈많은 백수" },
-      { name: "김진실", details: "#31세 #ESFP #마케터<br>#장래희망 #현모양처" }
+      { name: "🤵‍권구환", details: "#31세 #ISTJ #개발자<br>#추구미 #건물주" },
+      { name: "👰김진실", details: "#31세 #ESFP #마케터<br>#추구미 #돈많은백수" }
     ]
   },
 
