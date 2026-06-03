@@ -575,6 +575,7 @@ let dragStartX = 0;
 let dragStartY = 0;
 let lastTapTime = 0;
 let isSwipeClosing = false;
+let isPinching = false;
 
 function openPhotoModal(images, index) {
   modalImages = images;
@@ -622,7 +623,7 @@ function resetZoom() {
 
 function updateTransform() {
   const img = $('#modalImg');
-  img.style.transition = isDragging ? 'none' : 'transform 0.3s ease';
+  img.style.transition = (isDragging || isPinching) ? 'none' : 'transform 0.3s ease';
   img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
 }
 
@@ -676,6 +677,7 @@ function initPhotoModal() {
       e.preventDefault();
       initialDistance = getDistance(touches[0], touches[1]);
       initialScale = scale;
+      isPinching = true;
     } else if (touches.length === 1) {
       // 더블탭 감지
       const currentTime = new Date().getTime();
@@ -756,6 +758,7 @@ function initPhotoModal() {
     if (touches.length === 2) {
       // 핀치 줌 종료
       lastScale = scale;
+      isPinching = false;
     } else if (isDragging) {
       // 드래그 종료
       isDragging = false;
