@@ -574,6 +574,7 @@ let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
 let lastTapTime = 0;
+let isSwipeClosing = false;
 
 function openPhotoModal(images, index) {
   modalImages = images;
@@ -621,8 +622,8 @@ function resetZoom() {
 
 function updateTransform() {
   const img = $('#modalImg');
-  img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
   img.style.transition = isDragging ? 'none' : 'transform 0.3s ease';
+  img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
 }
 
 function getDistance(touch1, touch2) {
@@ -702,6 +703,7 @@ function initPhotoModal() {
         // 스와이프 준비
         touchStartX = touches[0].clientX;
         touchStartY = touches[0].clientY;
+        isSwipeClosing = false;
       }
     }
   }, { passive: false });
@@ -723,13 +725,29 @@ function initPhotoModal() {
       e.preventDefault();
       translateX = touches[0].clientX - dragStartX;
       translateY = touches[0].clientY - dragStartY;
-      
+
       // 이동 범위 제한
       const maxTranslate = (scale - 1) * 150;
       translateX = Math.max(-maxTranslate, Math.min(maxTranslate, translateX));
       translateY = Math.max(-maxTranslate, Math.min(maxTranslate, translateY));
-      
+
       updateTransform();
+    } else if (touches.length === 1 && scale === 1) {
+      // 아래로 스와이프하여 닫기
+      const dx = touches[0].clientX - touchStartX;
+      const dy = touches[0].clientY - touchStartY;
+
+      if (!isSwipeClosing && dy > 10 && Math.abs(dy) > Math.abs(dx)) {
+        isSwipeClosing = true;
+      }
+
+      if (isSwipeClosing) {
+        e.preventDefault();
+        const offset = Math.max(0, dy);
+        img.style.transition = 'none';
+        img.style.transform = `translate(0px, ${offset}px) scale(1)`;
+        modal.style.backgroundColor = `rgba(0, 0, 0, ${Math.max(0.3, 0.95 - offset / 600)})`;
+      }
     }
   }, { passive: false });
 
@@ -743,18 +761,29 @@ function initPhotoModal() {
       isDragging = false;
       lastTranslateX = translateX;
       lastTranslateY = translateY;
+    } else if (isSwipeClosing) {
+      // 아래로 스와이프 종료: 임계값 초과 시 닫기, 아니면 원위치
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      modal.style.backgroundColor = '';
+      if (dy > 100) {
+        closePhotoModal();
+      } else {
+        img.style.transition = 'transform 0.3s ease';
+        img.style.transform = 'translate(0px, 0px) scale(1)';
+      }
+      isSwipeClosing = false;
     } else if (scale === 1) {
       // 스와이프 처리 (확대되지 않은 상태에서만)
       touchEndX = e.changedTouches[0].clientX;
       touchEndY = e.changedTouches[0].clientY;
       handleSwipe();
     }
-    
+
     // 축소 시 위치 초기화
-    if (scale <= 1) {
+    if (scale <= 1 && !isSwipeClosing) {
       resetZoom();
     }
-    
+
     touches = [];
   }, { passive: true });
 
